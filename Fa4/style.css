@@ -1,0 +1,57 @@
+body{
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 20px;
+}
+
+h1{
+    text-align: center;
+    color: #333;
+    margin-bottom: 30px;
+}
+
+.table-container{
+    width: 100%;
+    overflow-x: auto;
+}
+
+table{
+    width: 100%;
+    border: 1px solid black;
+}
+
+td{
+    width: 20%;
+    vertical-align: top;
+    border: 1px solid black;
+    padding: 15px;
+    background-color: white;
+}
+
+.story-card{
+    text-align: center;
+}
+
+.story-card img{
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+.story-card h2{
+    color: #007BFF;
+}
+
+.story-card p{
+    text-align: justify;
+    line-height: 1.5;
+}
+
+footer{
+    text-align: center;
+    margin-top: 20px;
+    padding: 5px;
+    background-color: #333;
+    color: white;
+}
