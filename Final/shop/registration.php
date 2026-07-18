@@ -1,4 +1,8 @@
-<?php require('register.php'); ?>
+<?php 
+session_start();
+require('db.php');
+require('register.php');
+?>
 
 <?php require('header.php'); ?>
 
