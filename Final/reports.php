@@ -28,7 +28,7 @@ require('seller_header.php');
             <table class="table table-striped align-middle">
                 <thead>
                     <tr>
-                        <th>Seller ID</th>
+                        <th>User ID</th>
                         <th>Name</th>
                         <th>Email</th>
                         <th>Date</th>
