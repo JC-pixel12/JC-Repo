@@ -6,7 +6,15 @@ function ensureAuditTable($auditConn)
     }
 
     $auditConn->query('CREATE DATABASE IF NOT EXISTS db_user_profile');
-    $auditConn->query("CREATE TABLE IF NOT EXISTS tbl_audit (
+    $auditConn->query('CREATE DATABASE IF NOT EXISTS db_product');
+    $auditConn->query("CREATE TABLE IF NOT EXISTS db_user_profile.tbl_audit (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        seller_id INT NOT NULL,
+        action_date DATE NOT NULL,
+        action_time TIME NOT NULL,
+        action VARCHAR(100) NOT NULL
+    )");
+    $auditConn->query("CREATE TABLE IF NOT EXISTS db_product.tbl_audit (
         id INT AUTO_INCREMENT PRIMARY KEY,
         seller_id INT NOT NULL,
         action_date DATE NOT NULL,
@@ -35,7 +43,9 @@ function logAuditAction($auditConn, $sellerId, $action)
     $actionDate = date('Y-m-d');
     $actionTime = date('H:i:s');
 
-    return mysqli_query($auditConn, "INSERT INTO tbl_audit (seller_id, action_date, action_time, action) VALUES ($sellerId, '$actionDate', '$actionTime', '$actionEsc')");
+    return mysqli_query($auditConn, "
+        INSERT INTO tbl_audit (seller_id, action_date, action_time, action) 
+        VALUES ($sellerId, '$actionDate', '$actionTime', '$actionEsc')");
 }
 
 function getAuditEntries($auditConn)
@@ -45,6 +55,18 @@ function getAuditEntries($auditConn)
     }
 
     ensureAuditTable($auditConn);
-    return mysqli_query($auditConn, 'SELECT a.seller_id, a.action_date, a.action_time, a.action, s.first_name, s.last_name, s.email FROM tbl_audit a LEFT JOIN tbl_seller s ON a.seller_id = s.id ORDER BY a.action_date DESC, a.action_time DESC');
+
+    $sql = "
+        SELECT a.seller_id, a.action_date, a.action_time, a.action, s.first_name, s.last_name, s.email
+        FROM db_user_profile.tbl_audit a
+        LEFT JOIN db_user_profile.tbl_seller s ON a.seller_id = s.id
+        UNION ALL
+        SELECT a.seller_id, a.action_date, a.action_time, a.action, s.first_name, s.last_name, s.email
+        FROM db_product.tbl_audit a
+        LEFT JOIN db_user_profile.tbl_seller s ON a.seller_id = s.id
+        ORDER BY action_date DESC, action_time DESC
+    ";
+
+    return mysqli_query($auditConn, $sql);
 }
 ?>
